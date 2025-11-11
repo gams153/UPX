@@ -1,0 +1,138 @@
+:root {
+  --bg: #f4f7fa;
+  --card: #ffffff;
+  --accent: #2563eb;
+  --accent-light: #dbeafe;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+}
+
+*{box-sizing:border-box}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 30px;
+}
+
+h1, h2 {
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.container {
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: var(--card);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  transition: border-color 0.2s;
+}
+
+input[type="number"]:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+button {
+  background-color: var(--accent);
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+}
+
+button.secondary {
+  background-color: var(--accent-light);
+  color: var(--accent);
+}
+
+button.secondary:hover {
+  background-color: #bfdbfe;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+#valoresContainer input {
+  margin: 5px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  background-color: var(--accent-light);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.right { text-align: right; }
+.big { font-weight: 700; color: var(--accent); }
+
+.result-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: #15803d;
+}
+
+.muted { color: var(--muted); font-size: 13px; }
+
+.footer {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+@media (max-width: 720px) {
+  body { padding: 15px; }
+}
+  

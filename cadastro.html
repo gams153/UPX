@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro - Energy Track</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">Energy<span>Track</span></h1>
+      <nav><a href="index.html">Início</a></nav>
+    </div>
+  </header>
+
+  <section class="cadastro">
+    <div class="container">
+      <h2>Cadastro de Empresa</h2>
+      <p>Preencha os dados abaixo para acessar a calculadora de ICMS.</p>
+
+      <form action="processa_cadastro.php" method="post" class="cadastro-form">
+        <h3>Dados da Empresa</h3>
+        <input type="text" name="razao_social" placeholder="Razão Social" required>
+        <input type="text" name="cnpj" placeholder="CNPJ (somente números)" required>
+        <input type="text" name="inscricao_estadual" placeholder="Inscrição Estadual">
+        <input type="text" name="setor" placeholder="Setor / Indústria">
+
+        <h3>Responsável</h3>
+        <input type="text" name="nome_usuario" placeholder="Nome completo" required>
+        <input type="email" name="email" placeholder="E-mail corporativo" required>
+        <input type="tel" name="telefone" placeholder="Telefone comercial" required>
+        <input type="password" name="senha" placeholder="Senha de acesso" required>
+
+        <button type="submit" class="btn">Cadastrar e Acessar Calculadora</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 ICMS Control</p>
+  </footer>
+</body>
+</html>

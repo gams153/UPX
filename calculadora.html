@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calculadora de Economia e Recuperação de ICMS</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de Economia e Recuperação de ICMS</h1>
+
+    <div class="card">
+      <h2>Somar Valores de Fatura</h2>
+      <label for="qtdValores">Quantidade de valores:</label>
+      <input type="number" id="qtdValores" min="1" step="1" value="1" />
+      <button id="gerarCampos">Gerar Campos</button>
+
+      <div id="valoresContainer" class="valores"></div>
+      <div class="soma-total">
+        <strong>Total Somado:</strong> <span id="totalValores">R$ 0,00</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Informações de Cálculo</h2>
+      <div class="grid">
+        <div>
+          <label for="fatura">Valor da Fatura Mensal (R$)</label>
+          <input id="fatura" type="number" min="0" step="0.01" placeholder="Ex: 50000" />
+        </div>
+
+        <div>
+          <label for="aliqAtual">Alíquota de ICMS Atual (%)</label>
+          <input id="aliqAtual" type="number" min="0" step="0.01" placeholder="Ex: 25" />
+        </div>
+
+        <div>
+          <label for="aliqNovo">Alíquota de ICMS Nova (%)</label>
+          <input id="aliqNovo" type="number" min="0" step="0.01" placeholder="Ex: 18" />
+        </div>
+
+        <div>
+          <label for="anos">Período a Recuperar (anos)</label>
+          <input id="anos" type="number" min="1" step="1" placeholder="Ex: 5" />
+        </div>
+
+        <div>
+          <label for="corr">Correção Monetária Estimada (%)</label>
+          <input id="corr" type="number" min="0" step="0.01" placeholder="Ex: 11.7" />
+        </div>
+      </div>
+
+      <div class="botoes">
+        <button id="calc">Calcular</button>
+        <button id="reset" class="secondary">Limpar</button>
+      </div>
+    </div>
+
+    <div id="results" class="card" style="display:none">
+      <h2>Resultados</h2>
+      <table>
+        <thead>
+          <tr><th>Descrição</th><th class="right">Valor</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Valor da Fatura Mensal</td><td class="right" id="rFatura">R$ 0,00</td></tr>
+          <tr><td>ICMS Mensal (Atual)</td><td class="right" id="rICMSAtual">R$ 0,00</td></tr>
+          <tr><td>ICMS Mensal (Novo)</td><td class="right" id="rICMSNovo">R$ 0,00</td></tr>
+          <tr><td>Economia Mensal</td><td class="right big" id="rEconMensal">R$ 0,00</td></tr>
+          <tr><td>Economia Anual</td><td class="right" id="rEconAnual">R$ 0,00</td></tr>
+          <tr><td>Montante Recuperável (últimos <span id="rAnos">5</span> anos, sem correção)</td><td class="right" id="rMontSem">R$ 0,00</td></tr>
+          <tr><td><strong>Montante Corrigido (com correção monetária)</strong></td><td class="right result-amount" id="rMontCorr">R$ 0,00</td></tr>
+        </tbody>
+      </table>
+      <div id="details" class="muted"></div>
+    </div>
+
+    <div class="footer card">
+      <strong>Como os cálculos são feitos:</strong>
+      <p class="muted">ICMS mensal = Fatura × (Alíquota / 100).<br>
+      Economia mensal = ICMS atual − ICMS novo.<br>
+      Montante sem correção = Economia mensal × 12 × anos.<br>
+      Montante corrigido = Montante sem correção × (1 + Correção/100).</p>
+    </div>
+  </div>
+
+  <script>
+    function fmt(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}    
+    function number(v){const n = Number(v); return isNaN(n)?0:n}
+
+    document.getElementById('gerarCampos').addEventListener('click',()=>{
+      const qtd = parseInt(document.getElementById('qtdValores').value);
+      const container = document.getElementById('valoresContainer');
+      container.innerHTML = '';
+      for(let i=0;i<qtd;i++){
+        const input = document.createElement('input');
+        input.type='number';
+        input.min='0';
+        input.step='0.01';
+        input.placeholder=`Valor ${i+1}`;
+        input.addEventListener('input',somarValores);
+        container.appendChild(input);
+      }
+    });
+
+    function somarValores(){
+      const inputs=document.querySelectorAll('#valoresContainer input');
+      let soma=0;
+      inputs.forEach(i=>soma+=number(i.value));
+      document.getElementById('totalValores').textContent=fmt(soma);
+      document.getElementById('fatura').value=soma.toFixed(2);
+    }
+
+    document.getElementById('calc').addEventListener('click', ()=>{
+      const fatura = number(document.getElementById('fatura').value);
+      const aliqAtual = number(document.getElementById('aliqAtual').value);
+      const aliqNovo = number(document.getElementById('aliqNovo').value);
+      const anos = Math.max(1, Math.floor(number(document.getElementById('anos').value) || 5));
+      const corr = number(document.getElementById('corr').value);
+
+      const icmsAtual = fatura * (aliqAtual/100);
+      const icmsNovo = fatura * (aliqNovo/100);
+      const econMensal = icmsAtual - icmsNovo;
+      const econAnual = econMensal * 12;
+      const montSem = econMensal * 12 * anos;
+      const montCorr = montSem * (1 + corr/100);
+
+      document.getElementById('rFatura').textContent = fmt(fatura);
+      document.getElementById('rICMSAtual').textContent = fmt(icmsAtual);
+      document.getElementById('rICMSNovo').textContent = fmt(icmsNovo);
+      document.getElementById('rEconMensal').textContent = fmt(econMensal);
+      document.getElementById('rEconAnual').textContent = fmt(econAnual);
+      document.getElementById('rMontSem').textContent = fmt(montSem);
+      document.getElementById('rMontCorr').textContent = fmt(montCorr);
+      document.getElementById('rAnos').textContent = anos;
+
+      const details = [];
+      details.push(`Alíquota atual: ${aliqAtual.toFixed(2)}% → ICMS atual = ${fmt(icmsAtual)}`);
+      details.push(`Alíquota nova: ${aliqNovo.toFixed(2)}% → ICMS novo = ${fmt(icmsNovo)}`);
+      details.push(`Economia mensal = ${fmt(econMensal)}, anual = ${fmt(econAnual)}`);
+      details.push(`Montante ${anos} anos sem correção = ${fmt(montSem)}`);
+      details.push(`Montante corrigido (${corr.toFixed(2)}%) = ${fmt(montCorr)}`);
+
+      document.getElementById('details').innerText = details.join('\n');
+      document.getElementById('results').style.display = 'block';
+    });
+
+    document.getElementById('reset').addEventListener('click', ()=>{
+      document.querySelectorAll('input').forEach(i => i.value = '');
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('totalValores').textContent='R$ 0,00';
+      document.getElementById('valoresContainer').innerHTML='';
+    });
+  </script>
+</body>
+</html>
